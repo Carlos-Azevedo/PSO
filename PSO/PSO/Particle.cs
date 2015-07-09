@@ -29,13 +29,36 @@ namespace PSO
     public abstract class Particle
     {
         #region Properties
-        public List<Object> Speeds;
+        public List<Double> Speeds;
 
-        public Solution Sol;
+        public Solution PersonalBestSolution;
         #endregion
 
         #region Methods
-        public List<Object> UpdateSpeeds()
+        //public virtual List<Double> UpdateSpeeds(Solution globalBestSolution, Double personalBestWeight, Double globalBestWeight, Double acceleration, ref Random randomGenerator)
+        //{
+        //    List<Double> updatedSpeeds = new List<double>(this.Speeds.Count);
+
+        //    for (int index = 0; index < this.PersonalBestSolution.Parameters.Count; index++)
+        //    {
+        //        Double newSpeed = this.Speeds[index] * acceleration;
+        //        newSpeed = newSpeed + (this.PersonalBestSolution.Parameters[index] - this.Speeds[index]) * personalBestWeight * randomGenerator.NextDouble();
+        //        newSpeed = newSpeed + (globalBestSolution.Parameters[index] - this.Speeds[index]) * globalBestWeight * randomGenerator.NextDouble();
+        //        updatedSpeeds[index] = newSpeed;
+        //    }
+
+        //    return updatedSpeeds;
+        //}
+
+        public virtual List<Double> UpdateSpeeds(Object updateParameters, Func<Object, int, Double, Double> updateFunc)
+        {
+            List<Double> updatedSpeeds = new List<double>(this.Speeds.Count);
+            for(int index = 0; index < this.Speeds.Count; index++)
+            {
+                updatedSpeeds[index] = updateFunc(updateParameters, index, this.Speeds[index]);
+            }
+            return updatedSpeeds;
+        }
         #endregion
     }
 }

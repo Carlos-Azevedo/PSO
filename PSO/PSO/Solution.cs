@@ -34,7 +34,12 @@ namespace PSO
 		/// <summary>
         /// The set of parameters that compose this solution.
         /// </summary>
-        public IList<Object> Parameters;
+        public List<Double> Parameters;
+
+        /// <summary>
+        /// This represents how thre result the solution is for its current set of parameters
+        /// </summary>
+        public Double Fitness;
 	    #endregion
 
 
@@ -48,27 +53,30 @@ namespace PSO
         /// <returns>
         /// True if this Solution is considered better than other, False otherwise.
         /// </returns>
-        public bool BetterThan(Solution other);
+        public virtual bool BetterThan(Solution other)
+        {
+            return this.Fitness > other.Fitness;
+        }
 
         /// <summary>
         /// Call to update the value of the solution's parameters for each iteration of the PSO.
         /// </summary>
-        /// <param name="speeds">
-        /// List of individual speeds for each parameter, used as the first parameter of the updateFunc call.
+        /// <param name="speedParameters">
+        /// List of individual speedParameters for each parameter, used as the first parameter of the updateFunc call.
         /// </param>
         /// <param name="updateFunc">
         /// Updates each value of the Parameters property using a value of speeds. Returns the new value for the updated parameter.
         /// </param>
-        public virtual void UpdateParameters(List<Object> speeds, Func<Object, Object, Object> updateFunc)
+        public virtual void UpdateParameters(List<Object> speedParameters, Func<Object, Double, Double> updateFunc)
         {
-            if(speeds.Count != Parameters.Count)
+            if(speedParameters.Count != Parameters.Count)
             {
                 throw new InvalidOperationException("The number of elements in speeds must match the number of elements in Parameters.");
             }
 
-            for (int index = 0; index < Parameters.Count; index++)
+            for (int index = 0; index < this.Parameters.Count; index++)
             {
-                Parameters[index] = updateFunc(Parameters[index], speeds[index]);
+                Parameters[index] = updateFunc(speedParameters[index], this.Parameters[index]);
             }
         } 
         #endregion
