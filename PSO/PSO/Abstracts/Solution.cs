@@ -48,9 +48,18 @@ namespace PSO.Abstracts
         /// <summary>
         /// Function used to update this Solution's Parameters property based on the list of speeds, one for each parameter.
         /// </summary>
-        public Func<List<Double>, List<Double>, List<Double>> UpdateParametersFunction;
-	    #endregion
+        public Func<List<Double>, List<Double>, Double, Double, List<Double>> UpdateParametersFunction;
 
+        /// <summary>
+        /// Lowest value a Parameter can assume. 
+        /// </summary>
+        public Double MinimumParameterTreshold;
+
+        /// <summary>
+        /// Highest value a Parameter can assume.
+        /// </summary>
+        public Double MaximumParameterThreshold;
+	    #endregion
 
         #region Methods
         /// <summary>
@@ -65,11 +74,19 @@ namespace PSO.Abstracts
         /// <param name="updateParametersFunction">
         /// The function used to update this Solution's parameters.
         /// </param>
-        public Solution(List<Double> parameters, Func<SolutionParameters, Double> solutionExecution, Func<List<Double>, List<Double>, List<Double>> updateParametersFunction)
+        /// <param name="minimumParameter">
+        /// Lowest value a Parameter can assume.
+        /// </param>
+        /// <param name="maximumParameter">
+        /// Highest value a Parameter can assume.
+        /// </param>
+        public Solution(List<Double> parameters, Func<SolutionParameters, Double> solutionExecution, Func<List<Double>, List<Double>, Double, Double, List<Double>> updateParametersFunction, Double minimumParameter, Double maximumParameter)
         {
             this.Parameters = parameters;
             this.SolutionExecution = solutionExecution;
             this.UpdateParametersFunction = updateParametersFunction;
+            this.MinimumParameterTreshold = minimumParameter;
+            this.MaximumParameterThreshold = maximumParameter;
             this.UpdateFitness();
         }
 
@@ -101,7 +118,7 @@ namespace PSO.Abstracts
                 throw new InvalidOperationException("The number of elements in speeds must match the number of elements in Parameters.");
             }
 
-            this.Parameters = this.UpdateParametersFunction(speeds, this.Parameters);
+            this.Parameters = this.UpdateParametersFunction(speeds, this.Parameters, this.MinimumParameterTreshold, this.MaximumParameterThreshold);
         }
 
         /// <summary>
