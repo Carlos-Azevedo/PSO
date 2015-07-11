@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PSO
+namespace PSO.Abstracts
 {
     public abstract class Swarm
     {

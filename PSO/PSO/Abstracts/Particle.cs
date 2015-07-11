@@ -20,18 +20,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PSO.Enumerators;
 
-namespace PSO
+namespace PSO.Abstracts
 {
     /// <summary>
     /// A particle describes an object that contains a current Solution, a best Solution, current n-dimensional speed and 
     /// </summary>
     public abstract class Particle
     {
+        #region Static Properties
+        public static UInt32 CurrentId = 0;
+        #endregion
+
         #region Properties
         public List<Double> Speeds;
 
         public Solution PersonalBestSolution;
+
+        public Solution CurrentSolution;
+
+        public UInt32 Id;
+
+        public EVariants Variant;
+
+        private Func<SpeedParameters, List<Double>> SpeedUpdateFunction;
         #endregion
 
         #region Methods
@@ -50,15 +63,30 @@ namespace PSO
         //    return updatedSpeeds;
         //}
 
-        public virtual List<Double> UpdateSpeeds(Object updateParameters, Func<Object, int, Double, Double> updateFunc)
+        public virtual void UpdateSpeeds()
         {
-            List<Double> updatedSpeeds = new List<double>(this.Speeds.Count);
-            for(int index = 0; index < this.Speeds.Count; index++)
-            {
-                updatedSpeeds[index] = updateFunc(updateParameters, index, this.Speeds[index]);
-            }
-            return updatedSpeeds;
+            SpeedParameters speedUpdateParameters = this.createSpeedParameters(this.Speeds);
+            this.Speeds = this.SpeedUpdateFunction(speedUpdateParameters);
+
         }
+
+        public virtual void UpdateSolution()
+        {
+            this.CurrentSolution.UpdateParameters(this.Speeds);
+            this.CurrentSolution.UpdateFitness();
+            if(this.CurrentSolution.BetterThan(this.PersonalBestSolution))
+            {
+                this.PersonalBestSolution = this.CurrentSolution.Copy();
+            }
+        }
+
+        /// <summary>
+        /// Used by each PSO variant to create their required parameters for updating the speed values.
+        /// </summary>
+        /// <returns>
+        /// This PSO variant's set of parameters used to update the values of the Speeds List.
+        /// </returns>
+        public abstract SpeedParameters createSpeedParameters(List<Double> speeds);
         #endregion
     }
 }
