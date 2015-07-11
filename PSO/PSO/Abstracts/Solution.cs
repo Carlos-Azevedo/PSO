@@ -74,7 +74,7 @@ namespace PSO.Abstracts
         }
 
         /// <summary>
-        /// Compares this instance of Solution to another and returns if this is better.
+        /// Compares this Solution's Fitness score to another's and returns if this is better.
         /// </summary>
         /// <param name="other">
         /// The solution this object is being compared to.
@@ -88,7 +88,7 @@ namespace PSO.Abstracts
         }
 
         /// <summary>
-        /// Call to update the value of the solution's parameters for each iteration of the PSO.
+        /// Update the values of the solution's parameters.
         /// </summary>
         /// <param name="speeds">
         /// List of individual speeds for each parameter, used as the first parameter of the UpdateParametersFunction call.
@@ -118,7 +118,7 @@ namespace PSO.Abstracts
         }
 
         /// <summary>
-        /// Returns a copy of this Solution with the same set of parameters.
+        /// Returns a deap copy of this Solution.
         /// </summary>
         /// <returns>
         /// A copy of this Solution
@@ -136,6 +136,5 @@ namespace PSO.Abstracts
         /// </returns>
         public abstract SolutionParameters convertParameters(List<Double> parameters);
         #endregion
-
     }
 }

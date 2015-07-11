@@ -30,20 +30,41 @@ namespace PSO.Abstracts
     public abstract class Particle
     {
         #region Static Properties
+        /// <summary>
+        /// A static Id value incremented when a new particle is created so each one has an unique value.
+        /// </summary>
         public static UInt32 CurrentId = 0;
         #endregion
 
         #region Properties
+        /// <summary>
+        /// The List of speeds used to search for the optimal Solution in the problem's n-dimensional Solution Space.
+        /// </summary>
         public List<Double> Speeds;
 
+        /// <summary>
+        /// The personal best Solution configuration this Particle has found. Used to guide the direction in which the optimal Solution is searched.
+        /// </summary>
         public Solution PersonalBestSolution;
 
+        /// <summary>
+        /// The current Solution configuration for this particle.
+        /// </summary>
         public Solution CurrentSolution;
 
+        /// <summary>
+        /// An Id value used to uniquely identify this Particle.
+        /// </summary>
         public UInt32 Id;
 
+        /// <summary>
+        /// The PSO variant this Particle type belongs to.
+        /// </summary>
         public EVariants Variant;
 
+        /// <summary>
+        /// A function used to update the values of the Speeds parameter. Has a SpeedParameters type object as input.
+        /// </summary>
         private Func<SpeedParameters, List<Double>> SpeedUpdateFunction;
         #endregion
 
@@ -63,6 +84,10 @@ namespace PSO.Abstracts
         //    return updatedSpeeds;
         //}
 
+        /// <summary>
+        /// Updates this Particle's Speeds values based on the result of the current Solution's Parameters.
+        /// Different PSO variants have different algorithms to update the speed values.
+        /// </summary>
         public virtual void UpdateSpeeds()
         {
             SpeedParameters speedUpdateParameters = this.createSpeedParameters(this.Speeds);
@@ -70,6 +95,10 @@ namespace PSO.Abstracts
 
         }
 
+        /// <summary>
+        /// Updates this Particle's parameters values and calculates the new Parameters' fitness.
+        /// If the new Solution configuration has a better Fitness than the CurrentBestSolution, the new Solution becomes the CurrentBestSolution.
+        /// </summary>
         public virtual void UpdateSolution()
         {
             this.CurrentSolution.UpdateParameters(this.Speeds);
