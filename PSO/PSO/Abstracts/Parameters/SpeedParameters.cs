@@ -22,18 +22,18 @@ using System.Text;
 using System.Threading.Tasks;
 using PSO.Enumerators;
 
-namespace PSO.Abstracts
+namespace PSO.Abstracts.Parameters
 {
     public abstract class SpeedParameters
     {
         /// <summary>
-        /// The current speed values.
+        /// A list of random doubles between 0.0 and 1.0 used when updating speed values.
         /// </summary>
-        public List<Double> Speeds;
+        public List<Double> RandomValues;
 
         /// <summary>
         /// The list of PSO Variants for which this set of Speed Parameters is valid.
         /// </summary>
-        public List<EVariants> Variant;
+        public List<EPSOVariants> Variant;
     }
 }

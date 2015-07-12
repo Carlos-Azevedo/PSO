@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PSO.Enumerators;
-
+using PSO.Abstracts.Parameters;
 namespace PSO.Abstracts
 {
     /// <summary>
@@ -43,6 +43,12 @@ namespace PSO.Abstracts
         public List<Double> Speeds;
 
         /// <summary>
+        /// A set of parameters used to update the Speed values.
+        /// Should be updated by Swarm for each iteration.
+        /// </summary>
+        public SpeedParameters SpeedParameters;
+
+        /// <summary>
         /// The personal best Solution configuration this Particle has found. Used to guide the direction in which the optimal Solution is searched.
         /// </summary>
         public Solution PersonalBestSolution;
@@ -60,12 +66,7 @@ namespace PSO.Abstracts
         /// <summary>
         /// The PSO variant this Particle type belongs to.
         /// </summary>
-        public EVariants Variant;
-
-        /// <summary>
-        /// A function used to update the values of the Speeds parameter. Has a SpeedParameters type object as input.
-        /// </summary>
-        private Func<SpeedParameters, List<Double>> SpeedUpdateFunction;
+        public EPSOVariants Variant;
         #endregion
 
         #region Methods
@@ -84,16 +85,19 @@ namespace PSO.Abstracts
         //    return updatedSpeeds;
         //}
 
-        /// <summary>
-        /// Updates this Particle's Speeds values based on the result of the current Solution's Parameters.
-        /// Different PSO variants have different algorithms to update the speed values.
-        /// </summary>
-        public virtual void UpdateSpeeds()
+        public virtual void Iterate()
         {
-            SpeedParameters speedUpdateParameters = this.createSpeedParameters(this.Speeds);
-            this.Speeds = this.SpeedUpdateFunction(speedUpdateParameters);
-
+            this.UpdateSpeeds(this.SpeedParameters);
+            this.UpdateSolution();
         }
+        
+        /// <summary>
+        /// Updates this Particle's Speeds property values. Speed update parameters and operation vary with PSO implementations.
+        /// </summary>
+        /// <param name="parameters">
+        /// An object with the necessary parameters requried to update the Speeds for thie PSO variant
+        /// </param>
+        public abstract void UpdateSpeeds(SpeedParameters parameters);
 
         /// <summary>
         /// Updates this Particle's parameters values and calculates the new Parameters' fitness.
@@ -107,15 +111,7 @@ namespace PSO.Abstracts
             {
                 this.PersonalBestSolution = this.CurrentSolution.Copy();
             }
-        }
-
-        /// <summary>
-        /// Used by each PSO variant to create their required parameters for updating the speed values.
-        /// </summary>
-        /// <returns>
-        /// This PSO variant's set of parameters used to update the values of the Speeds List.
-        /// </returns>
-        public abstract SpeedParameters createSpeedParameters(List<Double> speeds);
+        }        
         #endregion
     }
 }

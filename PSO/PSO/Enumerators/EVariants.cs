@@ -20,7 +20,7 @@ namespace PSO.Enumerators
     /// <summary>
     /// Enumerates the different PSO variants and is used to check compatibility between objects that implement different parameter interfaces.
     /// </summary>
-    public enum EVariants
+    public enum EPSOVariants
     {
         Classic
     }

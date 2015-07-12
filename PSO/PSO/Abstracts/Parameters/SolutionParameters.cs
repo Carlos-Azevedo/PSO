@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PSO.Abstracts
+namespace PSO.Abstracts.Parameters
 {
     public abstract class SolutionParameters
     {

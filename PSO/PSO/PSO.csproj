@@ -41,8 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstracts\Particle.cs" />
-    <Compile Include="Abstracts\SolutionParameters.cs" />
-    <Compile Include="Abstracts\SpeedParameters.cs" />
+    <Compile Include="Abstracts\Parameters\SolutionParameters.cs" />
+    <Compile Include="Abstracts\Parameters\SpeedParameters.cs" />
     <Compile Include="Enumerators\EVariants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Abstracts\Solution.cs" />
