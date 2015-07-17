@@ -20,11 +20,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PSO.Abstracts.Parameters;
 
-namespace PSO.ClassicPSO
+namespace PSO.Interfaces
 {
-    class ClassicSpeedParameters : SpeedParameters
+    public interface ISolution
     {
+        Double Fitness{ get; set; }
+
+        List<Double> Parameters { get; set; }
+
+        bool BetterThan(ISolution other);
+
+        void UpdateParameters(List<Double> speeds);
+
+        void UpdateFitness();
+
+        ISolution Copy();
     }
 }

@@ -20,84 +20,58 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PSO.Enumerators;
-using PSO.Abstracts.Parameters;
+using PSO.Parameters;
+using PSO.Interfaces;
+
 namespace PSO.Abstracts
 {
     /// <summary>
     /// A particle describes an object that contains a current Solution, a best Solution, current n-dimensional speed and 
     /// </summary>
-    public abstract class Particle
+    public abstract class Particle : IParticle
     {
         #region Static Properties
+        private static UInt32 _CurrentId;
+
         /// <summary>
         /// A static Id value incremented when a new particle is created so each one has an unique value.
         /// </summary>
-        public static UInt32 CurrentId = 0;
+        public static UInt32 CurrentId
+        {
+            get { return ++_CurrentId; }
+        }
         #endregion
 
         #region Properties
         /// <summary>
-        /// The List of speeds used to search for the optimal Solution in the problem's n-dimensional Solution Space.
+        /// An object used to update the speed values.
         /// </summary>
-        public List<Double> Speeds;
+        public SpeedParameters SpeedParameters { get; set; }
 
         /// <summary>
-        /// A set of parameters used to update the Speed values.
-        /// Should be updated by Swarm for each iteration.
+        /// The List of speeds used to search for the optimal Solution in the problem's n-dimensional Solution Space.
         /// </summary>
-        public SpeedParameters SpeedParameters;
+        public List<Double> Speeds { get; set; }
 
         /// <summary>
         /// The personal best Solution configuration this Particle has found. Used to guide the direction in which the optimal Solution is searched.
         /// </summary>
-        public Solution PersonalBestSolution;
+        public ISolution PersonalBestSolution { get; set; }
 
         /// <summary>
         /// The current Solution configuration for this particle.
         /// </summary>
-        public Solution CurrentSolution;
+        public ISolution CurrentSolution { get; set; }
 
         /// <summary>
         /// An Id value used to uniquely identify this Particle.
         /// </summary>
         public UInt32 Id;
-
-        /// <summary>
-        /// The PSO variant this Particle type belongs to.
-        /// </summary>
-        public EPSOVariants Variant;
         #endregion
 
         #region Methods
-        //public virtual List<Double> UpdateSpeeds(Solution globalBestSolution, Double personalBestWeight, Double globalBestWeight, Double acceleration, ref Random randomGenerator)
-        //{
-        //    List<Double> updatedSpeeds = new List<double>(this.Speeds.Count);
 
-        //    for (int index = 0; index < this.PersonalBestSolution.Parameters.Count; index++)
-        //    {
-        //        Double newSpeed = this.Speeds[index] * acceleration;
-        //        newSpeed = newSpeed + (this.PersonalBestSolution.Parameters[index] - this.Speeds[index]) * personalBestWeight * randomGenerator.NextDouble();
-        //        newSpeed = newSpeed + (globalBestSolution.Parameters[index] - this.Speeds[index]) * globalBestWeight * randomGenerator.NextDouble();
-        //        updatedSpeeds[index] = newSpeed;
-        //    }
-
-        //    return updatedSpeeds;
-        //}
-
-        public virtual void Iterate()
-        {
-            this.UpdateSpeeds(this.SpeedParameters);
-            this.UpdateSolution();
-        }
-        
-        /// <summary>
-        /// Updates this Particle's Speeds property values. Speed update parameters and operation vary with PSO implementations.
-        /// </summary>
-        /// <param name="parameters">
-        /// An object with the necessary parameters requried to update the Speeds for thie PSO variant
-        /// </param>
-        public abstract void UpdateSpeeds(SpeedParameters parameters);
+        public abstract void Iterate();
 
         /// <summary>
         /// Updates this Particle's parameters values and calculates the new Parameters' fitness.

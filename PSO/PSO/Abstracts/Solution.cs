@@ -20,62 +20,51 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PSO.Abstracts.Parameters;
+using PSO.Interfaces;
+
 namespace PSO.Abstracts
 {
     /// <summary>
     /// The abstract for a Solution object.
     /// A Solution must contain a set of parameters, be able to update these parameters and be comparable to another solution.
     /// </summary>
-    public abstract class Solution
+    public abstract class Solution : ISolution
     {
 
         #region Properties
 		/// <summary>
         /// The set of parameters that compose this solution.
         /// </summary>
-        public List<Double> Parameters;
+        public List<Double> Parameters { get; set; }
 
         /// <summary>
         /// This represents how thre result the solution is for its current set of parameters.
         /// </summary>
-        public Double Fitness;
+        public Double Fitness { get; set; }
 
         /// <summary>
-        /// Lowest value a Parameter can assume. 
+        /// Private instance of AuxData.
         /// </summary>
-        public Double MinimumParameterTreshold;
+        protected Object _AuxData;
 
         /// <summary>
-        /// Highest value a Parameter can assume.
+        /// Auxiliary data needed to call RunSolution.
         /// </summary>
-        public Double MaximumParameterThreshold;
-	    #endregion
-
-        #region Methods
-        /// <summary>
-        /// Constructor for a solution object with the minimum information required to create a valid Solution object.
-        /// </summary>
-        /// <param name="parameters">
-        /// The list of parameters that characterizes this Solution.
-        /// </param>
-        /// <param name="updateParametersFunction">
-        /// The function used to update this Solution's parameters.
-        /// </param>
-        /// <param name="minimumParameter">
-        /// Lowest value a Parameter can assume.
-        /// </param>
-        /// <param name="maximumParameter">
-        /// Highest value a Parameter can assume.
-        /// </param>
-        public Solution(List<Double> parameters, Double minimumParameter, Double maximumParameter)
-        {
-            this.Parameters = parameters;
-            this.MinimumParameterTreshold = minimumParameter;
-            this.MaximumParameterThreshold = maximumParameter;
-            this.UpdateFitness();
+        public Object AuxData {
+            get
+            {
+                return _AuxData;
+            }
         }
 
+        /// <summary>
+        /// Method called to execute this solution. Must be thread safe.
+        /// Takes the list of parameters and the AuxData properties as input and outputs the Fitness value.
+        /// </summary>
+        public Func<List<Double>, Object, Double> RunSolution;
+	    #endregion
+
+        #region Methods      
         /// <summary>
         /// Compares this Solution's Fitness score to another's and returns if this is better.
         /// </summary>
@@ -85,48 +74,25 @@ namespace PSO.Abstracts
         /// <returns>
         /// True if this Solution is considered better than other, False otherwise.
         /// </returns>
-        public virtual bool BetterThan(Solution other)
+        public virtual bool BetterThan(ISolution other)
         {
             return this.Fitness > other.Fitness;
         }
 
         /// <summary>
-        /// Update the values of the solution's parameters. Uses MinimumParameterThreshold as a floor and MaximumParameterThreshold as a ceiling for the new values.
+        /// Update the values of the solution's parameters.
         /// </summary>
         /// <param name="speeds">
         /// List of individual speeds for each parameter, used as the first parameter of the UpdateParametersFunction call.
         /// </param>
-        public virtual void UpdateParameters(List<Double> speeds)
-        {
-            if (speeds.Count != Parameters.Count)
-            {
-                throw new InvalidOperationException("The number of elements in speeds must match the number of elements in Parameters.");
-            }
-            for (int index = 0; index < this.Parameters.Count; index++)
-            {
-                this.Parameters[index] = this.Parameters[index] + speeds[index];
-                if (this.Parameters[index] > this.MaximumParameterThreshold)
-                {
-                    this.Parameters[index] = this.MaximumParameterThreshold;
-                } else if (this.Parameters[index] < this.MinimumParameterTreshold)
-                {
-                    this.Parameters[index] = this.MinimumParameterTreshold;
-                }
-            }
-        }
-        
+        public abstract void UpdateParameters(List<Double> speeds);               
 
         /// <summary>
         /// Updates this solution's Fitness score for the execution of SolutionExecution with the current set of Parameters.
         /// </summary>
         public virtual void UpdateFitness()
         {
-            SolutionParameters solutionParameters = this.convertParameters(this.Parameters);
-            if (solutionParameters.SolutionType != this.GetType())
-            {
-                throw new InvalidOperationException("The convertParameters function returned a type of SolutionParameters different from this Solution Object's type.");
-            }
-            this.Fitness = this.TestSolution(solutionParameters);
+            this.Fitness = this.RunSolution(this.Parameters, this.AuxData);
         }
 
         /// <summary>
@@ -135,29 +101,7 @@ namespace PSO.Abstracts
         /// <returns>
         /// A copy of this Solution
         /// </returns>
-        public abstract Solution Copy();
-
-        /// <summary>
-        /// Executes the Solution and returns a Fitness Score for the current set of Parameters.
-        /// </summary>
-        /// <param name="parameters">
-        /// An object containing outside parameters required to test this Solution.
-        /// </param>
-        /// <returns>
-        /// A Fitness score for the current set of Parameters.
-        /// </returns>
-        public abstract Double TestSolution(SolutionParameters parameters);
-
-        /// <summary>
-        /// Takes the property Parameters and converts it into an object usable by SolutionExecution to generate the Fitness score.
-        /// </summary>
-        /// <param name="parameters">
-        /// This objects Parameters property
-        /// </param>
-        /// <returns>
-        /// A converted set of Parameters usable by SolutionExecution.
-        /// </returns>
-        public abstract SolutionParameters convertParameters(List<Double> parameters);
+        public abstract ISolution Copy();
         #endregion
     }
 }

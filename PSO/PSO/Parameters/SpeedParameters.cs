@@ -20,20 +20,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PSO.Enumerators;
-
-namespace PSO.Abstracts.Parameters
+namespace PSO.Parameters
 {
-    public abstract class SpeedParameters
+    public class SpeedParameters
     {
-        /// <summary>
-        /// A list of random doubles between 0.0 and 1.0 used when updating speed values.
-        /// </summary>
-        public List<Double> RandomValues;
+        public Double Acceleration;
 
-        /// <summary>
-        /// The list of PSO Variants for which this set of Speed Parameters is valid.
-        /// </summary>
-        public List<EPSOVariants> Variant;
+        public Double GlobalBestBias;
+
+        public Double PersonalBestBias;
+
+        public Double[] GlobalBestSolution;
+
+        public Double[] PersonalBestSolution;
+
+        public List<Double> RandomListGlobal;
+
+        public List<Double> RandomListPersonal;
     }
 }

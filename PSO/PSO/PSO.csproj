@@ -40,14 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IParticle.cs" />
+    <Compile Include="Interfaces\ISolution.cs" />
     <Compile Include="Abstracts\Particle.cs" />
-    <Compile Include="Abstracts\Parameters\SolutionParameters.cs" />
-    <Compile Include="Abstracts\Parameters\SpeedParameters.cs" />
+    <Compile Include="Parameters\SpeedParameters.cs" />
     <Compile Include="ClassicPSO\ClassicParticle.cs" />
     <Compile Include="ClassicPSO\ClassicSolution.cs" />
-    <Compile Include="ClassicPSO\ClassicSpeedParameters.cs" />
     <Compile Include="ClassicPSO\ClassicSwarm.cs" />
-    <Compile Include="Enumerators\EVariants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Abstracts\Solution.cs" />
     <Compile Include="Abstracts\Swarm.cs" />

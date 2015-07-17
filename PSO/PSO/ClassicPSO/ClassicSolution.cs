@@ -21,10 +21,55 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PSO.Abstracts;
+using PSO.Interfaces;
 
 namespace PSO.ClassicPSO
 {
-    public abstract class ClassicSolution : Solution
+    public class ClassicSolution : Solution
     {
+        #region Properties
+        public Double MaximumParameterThreshold;
+
+        public Double MinimumParameterThreshold;
+        #endregion
+
+        #region Methods
+        public ClassicSolution(List<Double> parameters, Func<List<Double>, Object, Double> runSolution, Object auxData, Double minParameter, Double maxParameter)
+        {
+            this.Parameters = parameters;
+            this._AuxData = auxData;
+            this.RunSolution = runSolution;
+            this.MaximumParameterThreshold = maxParameter;
+            this.MinimumParameterThreshold = minParameter;
+            this.UpdateFitness();
+        }
+
+        public override void UpdateParameters(List<double> speeds)
+        {
+            if (speeds.Count != Parameters.Count)
+            {
+                throw new InvalidOperationException("The number of elements in speeds must match the number of elements in Parameters.");
+            }
+            for (int index = 0; index < this.Parameters.Count; index++)
+            {
+                this.Parameters[index] = this.Parameters[index] + speeds[index];
+                if (this.Parameters[index] > this.MaximumParameterThreshold)
+                {
+                    this.Parameters[index] = this.MaximumParameterThreshold;
+                }
+                else if (this.Parameters[index] < this.MinimumParameterThreshold)
+                {
+                    this.Parameters[index] = this.MinimumParameterThreshold;
+                }
+            }            
+        }
+
+        public override ISolution Copy()
+        {
+            Double[] copyParametersList = new Double[this.Parameters.Count];
+            this.Parameters.CopyTo(copyParametersList);
+            return  new ClassicSolution(copyParametersList.ToList(), this.RunSolution, this.AuxData, this.MinimumParameterThreshold, this.MaximumParameterThreshold);
+        }
+        #endregion
     }
 }

@@ -21,10 +21,50 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PSO.Abstracts;
+using PSO.Parameters;
+using PSO.Interfaces;
 
 namespace PSO.ClassicPSO
 {
     public class ClassicParticle : Particle
     {
+        #region Methods
+        /// <summary>
+        /// Creates a new ClassicParticle.
+        /// </summary>
+        /// <param name="speeds">
+        /// The new particle's Speeds property.
+        /// </param>
+        /// <param name="particleSolution">
+        /// The new particle's CurrentSolution and PersonalBestSolution properties.
+        /// </param>
+        /// <param name="id">
+        /// A unique id to identify this Particle.
+        /// </param>
+        public ClassicParticle(List<Double> speeds, ISolution particleSolution, UInt32 id)
+        {
+            this.Speeds = speeds;
+            this.CurrentSolution = particleSolution;
+            this.PersonalBestSolution = particleSolution;
+            this.Id = id;
+        }
+
+        public void UpdateSpeeds(SpeedParameters parameters)
+        {
+            for (int index = 0; index < this.PersonalBestSolution.Parameters.Count; index++)
+            {
+                Double newSpeed = this.Speeds[index] * parameters.Acceleration;
+                newSpeed = newSpeed + (parameters.PersonalBestSolution[index] - this.Speeds[index]) * parameters.PersonalBestBias * parameters.RandomListPersonal[index];
+                newSpeed = newSpeed + (parameters.GlobalBestSolution[index] - this.Speeds[index]) * parameters.GlobalBestBias * parameters.RandomListGlobal[index];
+                this.Speeds[index] = newSpeed;
+            }
+        }
+
+        public override void Iterate()
+        {
+            this.UpdateSpeeds(this.SpeedParameters);
+            this.UpdateSolution();
+        }   
+        #endregion
     }
 }

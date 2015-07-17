@@ -15,13 +15,25 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-namespace PSO.Enumerators
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using PSO.Parameters;
+
+namespace PSO.Interfaces
 {
-    /// <summary>
-    /// Enumerates the different PSO variants and is used to check compatibility between objects that implement different parameter interfaces.
-    /// </summary>
-    public enum EPSOVariants
+    public interface IParticle
     {
-        Classic
+        List<Double> Speeds { get; set; }
+
+        ISolution PersonalBestSolution { get; set; }
+
+        ISolution CurrentSolution { get; set; }
+
+        SpeedParameters SpeedParameters { get; set; }
+
+        void Iterate();
     }
 }
