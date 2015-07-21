@@ -117,6 +117,17 @@ namespace PSO.Abstracts
 
         protected abstract List<IParticle> CreateParticles(SwarmCreationParameters parameters);
 
+        protected virtual void FillSwarmParameters(SwarmCreationParameters parameters)
+        {
+            parameters.VerifyValues();
+            this.FitnessThreshold = parameters.FitnessThreshold;
+            this.MaxIterations = parameters.MaxIterations;
+            this.RandomGenerator = parameters.RandomNumberGenerator;
+            this.FitnessThreshold = parameters.FitnessThreshold;
+            this.GlobalBestBias = parameters.GlobalBestBias;
+            this.PersonalBestBias = parameters.PersonalBestBias;
+        }
+
         protected virtual void CreateRandomsList(Double maximumParameter, Double minimumParameter, UInt32 numberOfParameters, ref List<Double> speeds, ref List<Double> parameters)
         {
             Double parameterRange = maximumParameter - minimumParameter;

@@ -30,13 +30,7 @@ namespace PSO.ClassicPSO
     {
         public ClassicSwarm(SwarmCreationParameters parameters)
         {
-            parameters.VerifyValues();
-            this.FitnessThreshold = parameters.FitnessThreshold;
-            this.MaxIterations = parameters.MaxIterations;
-            this.RandomGenerator = parameters.RandomNumberGenerator;
-            this.FitnessThreshold = parameters.FitnessThreshold;
-            this.GlobalBestBias = parameters.GlobalBestBias;
-            this.PersonalBestBias = parameters.PersonalBestBias;
+            this.FillSwarmParameters(parameters);
             this.Particles = this.CreateParticles(parameters);
             this.SplitParticlesInSets(parameters.NumberOfParticleSets);
         }
