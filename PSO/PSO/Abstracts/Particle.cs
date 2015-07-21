@@ -46,7 +46,9 @@ namespace PSO.Abstracts
         /// <summary>
         /// An object used to update the speed values.
         /// </summary>
-        public SpeedParameters SpeedParameters { get; set; }
+        public SpeedParameters SpeedParameters { get { return _SpeedParameters; } }
+
+        protected SpeedParameters _SpeedParameters;
 
         /// <summary>
         /// The List of speeds used to search for the optimal Solution in the problem's n-dimensional Solution Space.
@@ -73,6 +75,8 @@ namespace PSO.Abstracts
 
         public abstract void Iterate();
 
+        public abstract void UpdateSpeeds(SpeedParameters parameters);
+
         /// <summary>
         /// Updates this Particle's parameters values and calculates the new Parameters' fitness.
         /// If the new Solution configuration has a better Fitness than the CurrentBestSolution, the new Solution becomes the CurrentBestSolution.
@@ -86,6 +90,8 @@ namespace PSO.Abstracts
                 this.PersonalBestSolution = this.CurrentSolution.Copy();
             }
         }        
+
+        public abstract void SetSpeedParameters(SpeedParameters parameters);
         #endregion
     }
 }

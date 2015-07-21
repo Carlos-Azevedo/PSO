@@ -26,42 +26,31 @@ using PSO.Parameters;
 
 namespace PSO.ClassicPSO
 {
-    public class ClassicSwarmCreationParameters : SwarmCreationParameters
-    { }
-
     public class ClassicSwarm : Swarm
     {
-        public ClassicSwarm(ClassicSwarmCreationParameters parameters)
+        public ClassicSwarm(SwarmCreationParameters parameters)
         {
-            if (parameters.Solution.GetType() != typeof(ClassicSolution))
-            {
-                throw new InvalidOperationException("A classic PSO requires a ClassicSolution Solution to work");
-            }
+            parameters.VerifyValues();
             this.FitnessThreshold = parameters.FitnessThreshold;
             this.MaxIterations = parameters.MaxIterations;
             this.RandomGenerator = parameters.RandomNumberGenerator;
             this.FitnessThreshold = parameters.FitnessThreshold;
-            this.Acceleration = parameters.Acceleration;
             this.GlobalBestBias = parameters.GlobalBestBias;
             this.PersonalBestBias = parameters.PersonalBestBias;
-            this.Particles = this.CreateParticles(parameters.NumberOfParticles, parameters.MaximumParameterValue, parameters.MinimumParameterValue, parameters.Solution);           
+            this.Particles = this.CreateParticles(parameters);
+            this.SplitParticlesInSets(parameters.NumberOfParticleSets);
         }
 
-        public List<IParticle> CreateParticles(UInt32 numberOfParticles, Double maxParameterValue, Double minParameterValue, ISolution solution)
+        protected override List<IParticle> CreateParticles(SwarmCreationParameters parameters)
         {
-            Double parameterRange = maxParameterValue - minParameterValue;
-            Double speedRange = parameterRange * 2.0;
+            
             List<IParticle> particles = new List<IParticle>();
-            for (UInt32 index = 0; index < numberOfParticles; index++)
+            for (UInt32 index = 0; index < parameters.NumberOfParameters; index++)
             {
                 List<Double> newParameterList = new List<double>();
                 List<Double> newSpeedsList = new List<double>();
-                for (int parameterIndex = 0; parameterIndex < numberOfParticles; parameterIndex++)
-                {
-                    newParameterList.Add(RandomGenerator.NextDouble() * parameterRange - minParameterValue);
-                    newSpeedsList.Add(RandomGenerator.NextDouble() * speedRange - parameterRange);
-                }
-                ISolution newParticleSolution = solution.Copy();
+                this.CreateRandomsList(parameters.MaximumParameterValue, parameters.MinimumParameterValue, parameters.NumberOfParameters,ref newSpeedsList,ref newParameterList);
+                ISolution newParticleSolution = new ClassicSolution(parameters.SolutionFunction, parameters.AuxData, parameters.MinimumParameterValue, parameters.MaximumParameterValue);
                 newParticleSolution.Parameters = newParameterList;
                 newParticleSolution.UpdateFitness();
                 particles.Add(new ClassicParticle(newSpeedsList, newParticleSolution, Particle.CurrentId));
@@ -74,7 +63,6 @@ namespace PSO.ClassicPSO
             foreach (IParticle particle in this.Particles)
             {
                 SpeedParameters speedParams = new SpeedParameters();
-                speedParams.Acceleration = this.Acceleration;
                 speedParams.GlobalBestBias = this.GlobalBestBias;
                 speedParams.PersonalBestBias = this.PersonalBestBias;
                 speedParams.GlobalBestSolution = new Double[particle.PersonalBestSolution.Parameters.Count];
@@ -85,10 +73,10 @@ namespace PSO.ClassicPSO
                 speedParams.RandomListPersonal = new List<double>(particle.Speeds.Count);
                 for (int i = 0; i < particle.Speeds.Count; i++)
                 {
-                    speedParams.RandomListGlobal[i] = this.RandomGenerator.NextDouble();
-                    speedParams.RandomListPersonal[i] = this.RandomGenerator.NextDouble();
+                    speedParams.RandomListGlobal.Add(this.RandomGenerator.NextDouble());
+                    speedParams.RandomListPersonal.Add(this.RandomGenerator.NextDouble());
                 }
-                particle.SpeedParameters = speedParams;
+                particle.SetSpeedParameters(speedParams);
             }
         }
 
@@ -104,6 +92,7 @@ namespace PSO.ClassicPSO
                 {
                     break;
                 }
+                currentIteration++;
             }
             return this.GlobalBestSolution;
         }

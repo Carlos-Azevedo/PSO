@@ -1,4 +1,6 @@
-﻿/*
+extensions: designer.cs generated.cs
+extensions: .cs .cpp .h
+/*
 PSO.dll is a collection of different PSO implementations.
 Copyright (C) 2015  Carlos Frederico Azevedo
 
@@ -15,25 +17,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-namespace PSO.Parameters
-{
-    public class SpeedParameters
-    {
-        public Double GlobalBestBias;
-
-        public Double PersonalBestBias;
-
-        public Double[] GlobalBestSolution;
-
-        public Double[] PersonalBestSolution;
-
-        public List<Double> RandomListGlobal;
-
-        public List<Double> RandomListPersonal;
-    }
-}
+extensions: .aspx .ascx
+<%-- 
+Sample license text.
+--%>
+extensions: .vb
+'Sample license text.
+extensions:  .xml .config .xsd
+<!--
+Sample license text.
+-->

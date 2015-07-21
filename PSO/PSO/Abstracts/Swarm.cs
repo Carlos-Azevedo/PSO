@@ -21,34 +21,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PSO.Interfaces;
+using PSO.Parameters;
 
 namespace PSO.Abstracts
-{
-    public abstract class SwarmCreationParameters
-    {
-        public UInt32 MaxIterations;
-
-        public Double FitnessThreshold;
-
-        public Double MinimumParameterValue;
-
-        public Double MaximumParameterValue;
-
-        public Random RandomNumberGenerator;
-
-        public UInt32 NumberOfParticles;
-
-        public UInt32 NumberOfParameters;
-
-        public ISolution Solution;
-
-        public Double Acceleration;
-
-        public Double GlobalBestBias;
-
-        public Double PersonalBestBias;
-    }
-
+{ 
     public abstract class Swarm
     {
         #region Properties
@@ -84,11 +60,6 @@ namespace PSO.Abstracts
         public List<List<IParticle>> ParticleSets;
 
         /// <summary>
-        /// An acceleration value used when creating the SpeedParameters;
-        /// </summary>
-        public Double Acceleration;
-
-        /// <summary>
         /// A value used to weight the influence of the GlobalBestSolution when creating SpeedParameters.
         /// </summary>
         public Double GlobalBestBias;
@@ -104,6 +75,25 @@ namespace PSO.Abstracts
         /// Populates all particles with SpeedParameters based on this Iteration.
         /// </summary>
         public abstract void createSpeedParameters();
+
+        /// <summary>
+        /// Evenly populates the ParticleSets property with the contents of Partciles.
+        /// </summary>
+        /// <param name="numberOfSets">
+        /// How many sets should be created in total.
+        /// </param>
+        public virtual void SplitParticlesInSets(int numberOfSets)
+        {
+            this.ParticleSets = new List<List<IParticle>>();
+            for (int i = 0; i < this.Particles.Count; i++)
+            {
+                if (i < numberOfSets)
+                {
+                    this.ParticleSets.Add(new List<IParticle>());
+                }
+                this.ParticleSets[(int)(i % numberOfSets)].Add(this.Particles[i]);
+            }
+        }
 
         /// <summary>
         /// Runs a single iteration of the PSO algorithm.
@@ -124,6 +114,20 @@ namespace PSO.Abstracts
             });
             this.UpdateBestGlobalSolution();
         }
+
+        protected abstract List<IParticle> CreateParticles(SwarmCreationParameters parameters);
+
+        protected virtual void CreateRandomsList(Double maximumParameter, Double minimumParameter, UInt32 numberOfParameters, ref List<Double> speeds, ref List<Double> parameters)
+        {
+            Double parameterRange = maximumParameter - minimumParameter;
+            Double speedRange = parameterRange * 2.0;
+            for (int parameterIndex = 0; parameterIndex < numberOfParameters; parameterIndex++)
+            {
+                speeds.Add(RandomGenerator.NextDouble() * parameterRange + minimumParameter);
+                parameters.Add(RandomGenerator.NextDouble() * speedRange - parameterRange);
+            }
+        }
+
 
         /// <summary>
         /// Updates the GlobalBestSolution property.

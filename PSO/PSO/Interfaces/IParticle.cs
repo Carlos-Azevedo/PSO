@@ -32,7 +32,11 @@ namespace PSO.Interfaces
 
         ISolution CurrentSolution { get; set; }
 
-        SpeedParameters SpeedParameters { get; set; }
+        SpeedParameters SpeedParameters { get; }
+
+        void UpdateSpeeds(SpeedParameters parameters);
+
+        void SetSpeedParameters(SpeedParameters parameters);
 
         void Iterate();
     }

@@ -34,6 +34,14 @@ namespace PSO.ClassicPSO
         #endregion
 
         #region Methods
+        public ClassicSolution(Func<List<Double>, Object, Double> runSolution, Object auxData, Double minParameter, Double maxParameter)
+        {
+            this._AuxData = auxData;
+            this.RunSolution = runSolution;
+            this.MaximumParameterThreshold = maxParameter;
+            this.MinimumParameterThreshold = minParameter;
+        }
+
         public ClassicSolution(List<Double> parameters, Func<List<Double>, Object, Double> runSolution, Object auxData, Double minParameter, Double maxParameter)
         {
             this.Parameters = parameters;
@@ -68,7 +76,10 @@ namespace PSO.ClassicPSO
         {
             Double[] copyParametersList = new Double[this.Parameters.Count];
             this.Parameters.CopyTo(copyParametersList);
-            return  new ClassicSolution(copyParametersList.ToList(), this.RunSolution, this.AuxData, this.MinimumParameterThreshold, this.MaximumParameterThreshold);
+            ISolution copy =  new ClassicSolution(this.RunSolution, this.AuxData, this.MinimumParameterThreshold, this.MaximumParameterThreshold);
+            copy.Parameters = copyParametersList.ToList();
+            copy.Fitness = this.Fitness;
+            return copy;
         }
         #endregion
     }

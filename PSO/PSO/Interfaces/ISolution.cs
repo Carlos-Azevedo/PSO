@@ -29,12 +29,14 @@ namespace PSO.Interfaces
 
         List<Double> Parameters { get; set; }
 
+        Object AuxData { get; }
+
         bool BetterThan(ISolution other);
 
         void UpdateParameters(List<Double> speeds);
 
         void UpdateFitness();
-
+        
         ISolution Copy();
     }
 }

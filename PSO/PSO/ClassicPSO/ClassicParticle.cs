@@ -41,21 +41,22 @@ namespace PSO.ClassicPSO
         /// <param name="id">
         /// A unique id to identify this Particle.
         /// </param>
+
         public ClassicParticle(List<Double> speeds, ISolution particleSolution, UInt32 id)
         {
             this.Speeds = speeds;
             this.CurrentSolution = particleSolution;
-            this.PersonalBestSolution = particleSolution;
+            this.PersonalBestSolution = particleSolution.Copy();
             this.Id = id;
         }
 
-        public void UpdateSpeeds(SpeedParameters parameters)
+        public override void UpdateSpeeds(SpeedParameters parameters)
         {
-            for (int index = 0; index < this.PersonalBestSolution.Parameters.Count; index++)
+            for (int index = 0; index < this.CurrentSolution.Parameters.Count; index++)
             {
-                Double newSpeed = this.Speeds[index] * parameters.Acceleration;
-                newSpeed = newSpeed + (parameters.PersonalBestSolution[index] - this.Speeds[index]) * parameters.PersonalBestBias * parameters.RandomListPersonal[index];
-                newSpeed = newSpeed + (parameters.GlobalBestSolution[index] - this.Speeds[index]) * parameters.GlobalBestBias * parameters.RandomListGlobal[index];
+                Double newSpeed = this.Speeds[index];
+                newSpeed = newSpeed + (parameters.PersonalBestSolution[index] - this.CurrentSolution.Parameters[index]) * parameters.PersonalBestBias * parameters.RandomListPersonal[index];
+                newSpeed = newSpeed + (parameters.GlobalBestSolution[index] - this.CurrentSolution.Parameters[index]) * parameters.GlobalBestBias * parameters.RandomListGlobal[index];
                 this.Speeds[index] = newSpeed;
             }
         }
@@ -64,7 +65,12 @@ namespace PSO.ClassicPSO
         {
             this.UpdateSpeeds(this.SpeedParameters);
             this.UpdateSolution();
-        }   
+        }
+
+        public override void SetSpeedParameters(SpeedParameters parameters)
+        {
+            this._SpeedParameters = parameters;
+        }
         #endregion
     }
 }
