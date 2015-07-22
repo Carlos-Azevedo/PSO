@@ -52,6 +52,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Abstracts\Solution.cs" />
     <Compile Include="Abstracts\Swarm.cs" />
+    <Compile Include="StablePSO\StableParticle.cs" />
+    <Compile Include="StablePSO\StableSwarm.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PSO.licenseheader" />

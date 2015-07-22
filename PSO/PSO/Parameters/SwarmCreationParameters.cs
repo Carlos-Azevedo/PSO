@@ -74,4 +74,9 @@ namespace PSO.Parameters
             }
         }
     }
+
+    public class StablwSwarmCreationParameters : SwarmCreationParameters
+    {
+        public Double ConstraintValue;
+    }
 }

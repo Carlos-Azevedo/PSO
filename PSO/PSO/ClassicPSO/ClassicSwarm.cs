@@ -28,6 +28,9 @@ namespace PSO.ClassicPSO
 {
     public class ClassicSwarm : Swarm
     {
+        protected ClassicSwarm()
+        { }
+
         public ClassicSwarm(SwarmCreationParameters parameters)
         {
             this.FillSwarmParameters(parameters);

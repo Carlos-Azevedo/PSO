@@ -41,7 +41,6 @@ namespace PSO.ClassicPSO
         /// <param name="id">
         /// A unique id to identify this Particle.
         /// </param>
-
         public ClassicParticle(List<Double> speeds, ISolution particleSolution, UInt32 id)
         {
             this.Speeds = speeds;
@@ -49,6 +48,9 @@ namespace PSO.ClassicPSO
             this.PersonalBestSolution = particleSolution.Copy();
             this.Id = id;
         }
+
+        protected ClassicParticle()
+        { }
 
         public override void UpdateSpeeds(SpeedParameters parameters)
         {
