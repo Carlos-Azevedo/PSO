@@ -41,9 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InertiaPSO\InertiaParticle.cs" />
+    <Compile Include="InertiaPSO\InertiaSwarm.cs" />
     <Compile Include="Interfaces\IParticle.cs" />
     <Compile Include="Interfaces\ISolution.cs" />
     <Compile Include="Abstracts\Particle.cs" />
+    <Compile Include="Parameters\ParticleCreationParameters.cs" />
     <Compile Include="Parameters\SpeedParameters.cs" />
     <Compile Include="ClassicPSO\ClassicParticle.cs" />
     <Compile Include="ClassicPSO\ClassicSolution.cs" />

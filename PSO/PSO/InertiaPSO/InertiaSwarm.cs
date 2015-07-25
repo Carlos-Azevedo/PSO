@@ -25,27 +25,29 @@ using PSO.Parameters;
 using PSO.Interfaces;
 using PSO.Abstracts;
 
-namespace PSO.StablePSO
+namespace PSO.InertiaPSO
 {
-    /// <summary>
-    /// Based on the article The Particle Swarm—Explosion, Stability, and Convergence in a Multidimensional Complex Space
-    /// by Maurice Clerc and James Kennedy, this variation of the PSO uses a constraining factor to impede the Speeds values
-    /// from increasing infinitely, thus leading to a more stable PSO.
-    /// </summary>
-    public class StableSwarm : ClassicSwarm
+    public class InertiaSwarm : ClassicSwarm
     {
-        public Double Constraint { get; set; }
+        public Double InertiaMax;
 
-        public StableSwarm(StableSwarmCreationParameters parameters)
+        public Double InertiaMin;
+
+        public UInt32 InertiaMaxTime;
+
+        public InertiaSwarm(InertiaSwarmCreationParameters parameters)
         {
+            this.InertiaMax = parameters.InertiaMax;
+            this.InertiaMin = parameters.InertiaMin;
+            this.InertiaMaxTime = parameters.InertiaMaxTime;
             this.FillSwarmParameters(parameters); 
-            this.Constraint = StableSwarm.CalculateConstraint(parameters.GlobalBestBias, parameters.PersonalBestBias, parameters.ConstraintValue);
             this.Particles = this.CreateParticles(parameters);
             this.SplitParticlesInSets(parameters.NumberOfParticleSets);
         }
 
-        protected new List<IParticle> CreateParticles(SwarmCreationParameters parameters)
+        protected override List<IParticle> CreateParticles(SwarmCreationParameters parameters)
         {
+
             List<IParticle> particles = new List<IParticle>();
             for (UInt32 index = 0; index < parameters.NumberOfParameters; index++)
             {
@@ -55,29 +57,15 @@ namespace PSO.StablePSO
                 ISolution newParticleSolution = new ClassicSolution(parameters.SolutionFunction, parameters.AuxData, parameters.MinimumParameterValue, parameters.MaximumParameterValue);
                 newParticleSolution.Parameters = newParameterList;
                 newParticleSolution.UpdateFitness();
-                StableParticleCreationParameters creationParams = new StableParticleCreationParameters();
+                InertiaParticleCreationParameters creationParams = new InertiaParticleCreationParameters();
                 creationParams.Speeds = newSpeedsList;
                 creationParams.Solution = newParticleSolution;
-                creationParams.Constraint = this.Constraint;
-                particles.Add(new StableParticle(creationParams));
+                creationParams.InertiaMax = this.InertiaMax;
+                creationParams.InertiaMin = this.InertiaMin;
+                creationParams.InertiaMaxTime = this.InertiaMaxTime;
+                particles.Add(new InertiaParticle(creationParams));
             }
             return particles;
-        }
-
-        public static Double CalculateConstraint(Double globalBias, Double personalBias, Double constraint)
-        {
-            Double bias = globalBias + personalBias;
-            if (bias <= 4)
-            {
-                return Math.Pow(constraint, 0.5);
-            }
-            else
-            {
-                Double numerator = 2 * constraint;
-                Double denominator = Math.Pow(bias, 2) - 4 * bias;
-                denominator = bias - 2 + denominator;
-                return Math.Pow(numerator / denominator,0.5);
-            }
         }
     }
 }

@@ -20,36 +20,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PSO.ClassicPSO;
 using PSO.Interfaces;
-using PSO.Abstracts;
-using PSO.Parameters;
 
-namespace PSO.StablePSO
+namespace PSO.Parameters
 {
-    public class StableParticle : ClassicParticle
+    public class ClassicParticleCreationParameters
     {
-        public Double Constraint { get; set; }
+        public List<Double> Speeds { get; set; }
 
-        public StableParticle(StableParticleCreationParameters parameters)
-        {
-            this.Id = Particle.CurrentId;
-            this.FillParameters(parameters);
-        }
+        public ISolution Solution { get; set; }
+    }
 
-        protected virtual void FillParameters(StableParticleCreationParameters parameters)
-        {
-            base.FillParameters(parameters);
-            this.Constraint = parameters.Constraint;
-        }
+    public class StableParticleCreationParameters : ClassicParticleCreationParameters
+    {
+        public Double Constraint;
+    }
 
-        public override void UpdateSpeeds(Parameters.SpeedParameters parameters)
-        {
-            base.UpdateSpeeds(parameters);
-            for (int i = 0; i < this.Speeds.Count; i++)
-            {
-                this.Speeds[i] = this.Speeds[i] * this.Constraint;
-            }
-        }
+    public class InertiaParticleCreationParameters : ClassicParticleCreationParameters
+    {
+        public Double InertiaMax;
+
+        public Double InertiaMin;
+
+        public UInt32 InertiaMaxTime;
     }
 }

@@ -25,31 +25,52 @@ using PSO.Interfaces;
 using PSO.Abstracts;
 using PSO.Parameters;
 
-namespace PSO.StablePSO
+namespace PSO.InertiaPSO
 {
-    public class StableParticle : ClassicParticle
+    public class InertiaParticle : ClassicParticle
     {
-        public Double Constraint { get; set; }
+        #region Properties
+        public Double InertiaMax;
 
-        public StableParticle(StableParticleCreationParameters parameters)
+        public Double InertiaMin;
+
+        public UInt32 InertiaMaxTime;
+
+        private UInt32 CurrentIteration; 
+        #endregion
+
+        public InertiaParticle(InertiaParticleCreationParameters parameters)
         {
             this.Id = Particle.CurrentId;
-            this.FillParameters(parameters);
+            this.CurrentIteration = 0;
         }
 
-        protected virtual void FillParameters(StableParticleCreationParameters parameters)
+        public virtual void FillParameters(InertiaParticleCreationParameters parameters)
         {
             base.FillParameters(parameters);
-            this.Constraint = parameters.Constraint;
+            this.InertiaMax = parameters.InertiaMax;
+            this.InertiaMin = parameters.InertiaMin;
+            this.InertiaMaxTime = parameters.InertiaMaxTime;
         }
 
         public override void UpdateSpeeds(Parameters.SpeedParameters parameters)
         {
-            base.UpdateSpeeds(parameters);
+            Double currentInertia = InertiaMax;
+            if (CurrentIteration < InertiaMaxTime)
+	        {
+		          currentInertia = ((InertiaMaxTime -  CurrentIteration)/InertiaMaxTime) * (InertiaMax - InertiaMin) + InertiaMin;
+            }
             for (int i = 0; i < this.Speeds.Count; i++)
             {
-                this.Speeds[i] = this.Speeds[i] * this.Constraint;
+                this.Speeds[i] = this.Speeds[i] * currentInertia;
             }
+            base.UpdateSpeeds(parameters);
+        }
+
+        public override void SetSpeedParameters(Parameters.SpeedParameters parameters)
+        {
+            base.SetSpeedParameters(parameters);
+            this.CurrentIteration++;
         }
     }
 }

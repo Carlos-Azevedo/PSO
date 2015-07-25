@@ -75,8 +75,17 @@ namespace PSO.Parameters
         }
     }
 
-    public class StablwSwarmCreationParameters : SwarmCreationParameters
+    public class StableSwarmCreationParameters : SwarmCreationParameters
     {
         public Double ConstraintValue;
+    }
+
+    public class InertiaSwarmCreationParameters : SwarmCreationParameters
+    {
+        public Double InertiaMax;
+
+        public Double InertiaMin;
+
+        public UInt32 InertiaMaxTime;
     }
 }

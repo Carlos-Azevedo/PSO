@@ -50,7 +50,10 @@ namespace PSO.ClassicPSO
                 ISolution newParticleSolution = new ClassicSolution(parameters.SolutionFunction, parameters.AuxData, parameters.MinimumParameterValue, parameters.MaximumParameterValue);
                 newParticleSolution.Parameters = newParameterList;
                 newParticleSolution.UpdateFitness();
-                particles.Add(new ClassicParticle(newSpeedsList, newParticleSolution, Particle.CurrentId));
+                ClassicParticleCreationParameters creationParams = new ClassicParticleCreationParameters();
+                creationParams.Speeds = newSpeedsList;
+                creationParams.Solution = newParticleSolution;
+                particles.Add(new ClassicParticle(creationParams));
             }
             return particles;
         }

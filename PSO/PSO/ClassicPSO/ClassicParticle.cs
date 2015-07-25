@@ -32,21 +32,16 @@ namespace PSO.ClassicPSO
         /// <summary>
         /// Creates a new ClassicParticle.
         /// </summary>
-        /// <param name="speeds">
-        /// The new particle's Speeds property.
-        /// </param>
-        /// <param name="particleSolution">
-        /// The new particle's CurrentSolution and PersonalBestSolution properties.
-        /// </param>
-        /// <param name="id">
-        /// A unique id to identify this Particle.
-        /// </param>
-        public ClassicParticle(List<Double> speeds, ISolution particleSolution, UInt32 id)
+        public ClassicParticle(ClassicParticleCreationParameters parameters)
         {
-            this.Speeds = speeds;
-            this.CurrentSolution = particleSolution;
-            this.PersonalBestSolution = particleSolution.Copy();
-            this.Id = id;
+            this.Id = Particle.CurrentId;
+        }
+
+        protected virtual void FillParameters(ClassicParticleCreationParameters parameters)
+        {
+            this.Speeds = parameters.Speeds;
+            this.CurrentSolution = parameters.Solution;
+            this.PersonalBestSolution = parameters.Solution.Copy();
         }
 
         protected ClassicParticle()
