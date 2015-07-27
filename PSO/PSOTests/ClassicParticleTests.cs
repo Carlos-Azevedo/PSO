@@ -69,6 +69,7 @@ namespace PSOTests
         {
             Assert.AreEqual(this.Particle.CurrentSolution.Fitness, 1.0);
             Assert.AreEqual(this.Particle.PersonalBestSolution.Fitness, 2.0);
+            Assert.AreEqual(this.Particle.Id, 0);
         }
 
         [TestMethod]

@@ -88,4 +88,9 @@ namespace PSO.Parameters
 
         public UInt32 InertiaMaxTime;
     }
+
+    public class FrankensteinSwarmCreationParameters : InertiaSwarmCreationParameters
+    {
+        public UInt32 FinalTopologyUpdate;
+    }
 }

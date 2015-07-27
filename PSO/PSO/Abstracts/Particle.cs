@@ -31,14 +31,14 @@ namespace PSO.Abstracts
     public abstract class Particle : IParticle
     {
         #region Static Properties
-        private static UInt32 _CurrentId;
+        private static int _CurrentId;
 
         /// <summary>
         /// A static Id value incremented when a new particle is created so each one has an unique value.
         /// </summary>
-        public static UInt32 CurrentId
+        public static int CurrentId
         {
-            get { return ++_CurrentId; }
+            get { return _CurrentId++; }
         }
         #endregion
 
@@ -68,7 +68,7 @@ namespace PSO.Abstracts
         /// <summary>
         /// An Id value used to uniquely identify this Particle.
         /// </summary>
-        public UInt32 Id;
+        public int Id { get; set; }
         #endregion
 
         #region Methods

@@ -20,43 +20,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PSO.ClassicPSO;
-using PSO.Parameters;
+using PSO.InertiaPSO;
 using PSO.Interfaces;
-using PSO.Abstracts;
+using PSO.Parameters;
+using PSO.ClassicPSO;
 
-namespace PSO.InertiaPSO
+namespace PSO.FrankensteinPSO
 {
     /// <summary>
-    /// Described in "A Modified Particle Swarm Optimizer" in the "IEEE International Conference on Evolutionary Computation, 1998" and proposed by
-    /// Yuhui Shi and Russell Eberhart this variant of the PSO algorithm introduces an inertia parameters to the speed update step. This inertia 
-    /// decreases the overall speed with each iteration leading to a swarm that searches extensively at first and more cautiously in later
-    /// iterations.
+    /// Proposed in "Frankenstein’s PSO: A Composite Particle Swarm Optimization Algorithm" written by Marco A. Montes de Oca, Thomas Stützle, Mauro Birattari, 
+    /// Member, IEEE , and Marco Dorigo, Fellow, IEEE. In the article multiple variants of the PSO were evaluated and the Frankenstein PSO was proposed by using
+    /// the InertiaPSO combined with a mixture of the Fully Informed PSO and Adaptive Hierarchical Particle Swarm Optimizer. This PSO doesn't use the global
+    /// best solution, instead particles are affected by the best solution of other particles to which they are connected. These connections are then cut
+    /// during iterations.
     /// </summary>
-    public class InertiaSwarm : ClassicSwarm
+    public class FrankensteinSwarm : InertiaSwarm
     {
-        public Double InertiaMax;
+        public UInt32 FinalTopologyUpdate;
 
-        public Double InertiaMin;
-
-        public UInt32 InertiaMaxTime;
-
-        protected InertiaSwarm() { }
-
-        public InertiaSwarm(InertiaSwarmCreationParameters parameters)
+        public FrankensteinSwarm(FrankensteinSwarmCreationParameters parameters)
         {
             this._FillSwarmParameters(parameters);
             this.Particles = this.CreateParticles(parameters);
             this.SplitParticlesInSets(parameters.NumberOfParticleSets);
         }
 
-        protected void _FillSwarmParameters(InertiaSwarmCreationParameters parameters)
+        protected void _FillSwarmParameters(FrankensteinSwarmCreationParameters parameters)
         {
             parameters.VerifyValues();
-            this.InertiaMax = parameters.InertiaMax;
-            this.InertiaMin = parameters.InertiaMin;
-            this.InertiaMaxTime = parameters.InertiaMaxTime;
-            this.FillSwarmParameters((SwarmCreationParameters)parameters); 
+            this.FinalTopologyUpdate = parameters.FinalTopologyUpdate;
+            this._FillSwarmParameters((InertiaSwarmCreationParameters)parameters);
         }
 
         protected override List<IParticle> CreateParticles(SwarmCreationParameters parameters)
@@ -70,13 +63,22 @@ namespace PSO.InertiaPSO
                 ISolution newParticleSolution = new ClassicSolution(parameters.SolutionFunction, parameters.AuxData, parameters.MinimumParameterValue, parameters.MaximumParameterValue);
                 newParticleSolution.Parameters = newParameterList;
                 newParticleSolution.UpdateFitness();
-                InertiaParticleCreationParameters creationParams = new InertiaParticleCreationParameters();
+                FrankensteinParticleCreationParameters creationParams = new FrankensteinParticleCreationParameters();
                 creationParams.Speeds = newSpeedsList;
                 creationParams.Solution = newParticleSolution;
                 creationParams.InertiaMax = this.InertiaMax;
                 creationParams.InertiaMin = this.InertiaMin;
                 creationParams.InertiaMaxTime = this.InertiaMaxTime;
-                particles.Add(new InertiaParticle(creationParams));
+                creationParams.FinalTopologyUpdate = this.FinalTopologyUpdate;
+                creationParams.Particles = this.Particles;
+                int[] connectedIds = new int[parameters.NumberOfParameters];
+                for (int i = 0; i < parameters.NumberOfParticles; i++)
+			    {
+                    connectedIds[i] = i;			 
+			    }
+                creationParams.ConnectedIds = new LinkedList<int>(connectedIds);
+                creationParams.RandomGenerator = this.RandomGenerator;
+                particles.Add(new FrankensteinParticle(creationParams));
             }
             return particles;
         }

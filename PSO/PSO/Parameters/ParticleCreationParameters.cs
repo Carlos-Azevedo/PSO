@@ -26,9 +26,9 @@ namespace PSO.Parameters
 {
     public class ClassicParticleCreationParameters
     {
-        public List<Double> Speeds { get; set; }
+        public List<Double> Speeds;
 
-        public ISolution Solution { get; set; }
+        public ISolution Solution;
     }
 
     public class StableParticleCreationParameters : ClassicParticleCreationParameters
@@ -43,5 +43,16 @@ namespace PSO.Parameters
         public Double InertiaMin;
 
         public UInt32 InertiaMaxTime;
+    }
+
+    public class FrankensteinParticleCreationParameters : InertiaParticleCreationParameters
+    {
+        public UInt32 FinalTopologyUpdate;
+
+        public List<IParticle> Particles;
+
+        public LinkedList<int> ConnectedIds;
+
+        public Random RandomGenerator;
     }
 }

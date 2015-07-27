@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrankensteinPSO\FrankensteinParticle.cs" />
+    <Compile Include="FrankensteinPSO\FrankensteinSwarm.cs" />
     <Compile Include="InertiaPSO\InertiaParticle.cs" />
     <Compile Include="InertiaPSO\InertiaSwarm.cs" />
     <Compile Include="Interfaces\IParticle.cs" />

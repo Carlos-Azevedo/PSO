@@ -39,7 +39,7 @@ namespace PSO.StablePSO
 
         protected virtual void FillParameters(StableParticleCreationParameters parameters)
         {
-            base.FillParameters(parameters);
+            base._FillParameters(parameters);
             this.Constraint = parameters.Constraint;
         }
 

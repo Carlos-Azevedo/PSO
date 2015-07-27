@@ -29,31 +29,47 @@ namespace PSO.ClassicPSO
     public class ClassicParticle : Particle
     {
         #region Methods
+
+        #region Constructors
+        /// <summary>
+        /// Required for inheritance
+        /// </summary>
+        protected ClassicParticle()
+        { }
+
         /// <summary>
         /// Creates a new ClassicParticle.
         /// </summary>
         public ClassicParticle(ClassicParticleCreationParameters parameters)
         {
             this.Id = Particle.CurrentId;
-        }
+            this._FillParameters(parameters);
+        } 
+        #endregion
 
-        protected virtual void FillParameters(ClassicParticleCreationParameters parameters)
+        #region Protected
+        protected virtual void _FillParameters(ClassicParticleCreationParameters parameters)
         {
             this.Speeds = parameters.Speeds;
             this.CurrentSolution = parameters.Solution;
             this.PersonalBestSolution = parameters.Solution.Copy();
         }
 
-        protected ClassicParticle()
-        { }
+        protected virtual Double _CalculateInfluence(Double solutionParameter, Double bestParameter, Double bias, Double random)
+        {
+            return (bestParameter - solutionParameter) * bias * random;
+        }
+        #endregion
 
+        #region Public
+        #region IParticle Methods
         public override void UpdateSpeeds(SpeedParameters parameters)
         {
             for (int index = 0; index < this.CurrentSolution.Parameters.Count; index++)
             {
                 Double newSpeed = this.Speeds[index];
-                newSpeed = newSpeed + (parameters.PersonalBestSolution[index] - this.CurrentSolution.Parameters[index]) * parameters.PersonalBestBias * parameters.RandomListPersonal[index];
-                newSpeed = newSpeed + (parameters.GlobalBestSolution[index] - this.CurrentSolution.Parameters[index]) * parameters.GlobalBestBias * parameters.RandomListGlobal[index];
+                newSpeed = newSpeed + this._CalculateInfluence(this.CurrentSolution.Parameters[index], parameters.PersonalBestSolution[index], parameters.PersonalBestBias, parameters.RandomListPersonal[index]);
+                newSpeed = newSpeed + this._CalculateInfluence(this.CurrentSolution.Parameters[index], parameters.GlobalBestSolution[index], parameters.GlobalBestBias, parameters.RandomListGlobal[index]);
                 this.Speeds[index] = newSpeed;
             }
         }
@@ -67,7 +83,9 @@ namespace PSO.ClassicPSO
         public override void SetSpeedParameters(SpeedParameters parameters)
         {
             this._SpeedParameters = parameters;
-        }
+        }  
+        #endregion
+        #endregion
         #endregion
     }
 }

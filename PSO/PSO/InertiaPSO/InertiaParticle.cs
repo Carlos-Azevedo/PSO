@@ -36,40 +36,57 @@ namespace PSO.InertiaPSO
 
         public UInt32 InertiaMaxTime;
 
-        private UInt32 CurrentIteration; 
+        public UInt32 CurrentIteration; 
         #endregion
+        protected InertiaParticle()
+        { }
 
         public InertiaParticle(InertiaParticleCreationParameters parameters)
         {
             this.Id = Particle.CurrentId;
             this.CurrentIteration = 0;
+            this.FillParameters(parameters);
         }
 
         public virtual void FillParameters(InertiaParticleCreationParameters parameters)
         {
-            base.FillParameters(parameters);
+            base._FillParameters(parameters);
             this.InertiaMax = parameters.InertiaMax;
             this.InertiaMin = parameters.InertiaMin;
             this.InertiaMaxTime = parameters.InertiaMaxTime;
         }
 
-        public override void UpdateSpeeds(Parameters.SpeedParameters parameters)
+        public override void UpdateSpeeds(SpeedParameters parameters)
         {
-            Double currentInertia = InertiaMax;
-            if (CurrentIteration < InertiaMaxTime)
-	        {
-		          currentInertia = ((InertiaMaxTime -  CurrentIteration)/InertiaMaxTime) * (InertiaMax - InertiaMin) + InertiaMin;
-            }
+            Double currentInertia = this.CalculateInertia();
             for (int i = 0; i < this.Speeds.Count; i++)
             {
                 this.Speeds[i] = this.Speeds[i] * currentInertia;
             }
+
             base.UpdateSpeeds(parameters);
         }
 
-        public override void SetSpeedParameters(Parameters.SpeedParameters parameters)
+        public Double CalculateInertia()
+        {
+            Double currentInertia = InertiaMin;
+            if (CurrentIteration < InertiaMaxTime)
+            {
+                Double firstMember = ((Double)(InertiaMaxTime - CurrentIteration) / InertiaMaxTime);
+                Double secondMember = (InertiaMax - InertiaMin);
+                currentInertia = firstMember * secondMember + InertiaMin;
+            }
+            return currentInertia;
+        }
+
+        public override void SetSpeedParameters(SpeedParameters parameters)
         {
             base.SetSpeedParameters(parameters);
+        }
+
+        public override void UpdateSolution()
+        {
+            base.UpdateSolution();
             this.CurrentIteration++;
         }
     }

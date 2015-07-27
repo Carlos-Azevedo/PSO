@@ -69,14 +69,14 @@ namespace PSO.StablePSO
             Double bias = globalBias + personalBias;
             if (bias <= 4)
             {
-                return Math.Pow(constraint, 0.5);
+                return Math.Sqrt(constraint);
             }
             else
             {
                 Double numerator = 2 * constraint;
-                Double denominator = Math.Pow(bias, 2) - 4 * bias;
-                denominator = bias - 2 + denominator;
-                return Math.Pow(numerator / denominator,0.5);
+                Double denominator = Math.Sqrt(Math.Pow(bias, 2) - 4 * bias);
+                denominator = Math.Abs(bias - 2 + denominator);
+                return Math.Sqrt(numerator / denominator);
             }
         }
     }

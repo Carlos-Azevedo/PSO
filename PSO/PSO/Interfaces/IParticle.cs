@@ -26,6 +26,8 @@ namespace PSO.Interfaces
 {
     public interface IParticle
     {
+        int Id{ get; set; }
+
         List<Double> Speeds { get; set; }
 
         ISolution PersonalBestSolution { get; set; }
@@ -39,5 +41,14 @@ namespace PSO.Interfaces
         void SetSpeedParameters(SpeedParameters parameters);
 
         void Iterate();
+    }
+
+    public interface IConnectedParticles : IParticle
+    {
+        List<IParticle> Particles { get; set; }
+
+        LinkedList<int> ConnectedIds { get; set; }
+
+        UInt32 FinalTopologyUpdate { get; set; }
     }
 }
