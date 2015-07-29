@@ -171,11 +171,11 @@ namespace PSO.Parameters
             base.VerifyValues();
             if (this.InertiaMin <= 0.0 || this.InertiaMax <= 0.0)
             {
-                throw new InvalidOperationException("The values of Inertia must behigher than 0.");
+                throw new InvalidOperationException("The values of Inertia must be higher than 0.");
             }
             else if(this.InertiaMax < this.InertiaMin)
             {
-                throw new InvalidOperationException("The value of InertiaMax must behigher than InertiaMin.");
+                throw new InvalidOperationException("The value of InertiaMax must be higher than InertiaMin.");
             }
         }
     }
