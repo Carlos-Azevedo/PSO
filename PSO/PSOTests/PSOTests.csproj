@@ -56,7 +56,6 @@
     <Compile Include="ClassicSolutionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ClassicParticleTests.cs" />
-    <Compile Include="ClassicSwarmTests.cs" />
     <Compile Include="StableSwarmTests.cs" />
     <Compile Include="InertiaParticleTests.cs" />
     <Compile Include="FrankensteinParticleTests.cs" />
